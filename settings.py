@@ -8,7 +8,7 @@ class Settings(BaseSettings):
     HOST:str = "127.0.0.1"
     ENVIRONMENT: str
 
-    class config:
+    class Config:
         env_file = ".env"
 
 settings = Settings()
