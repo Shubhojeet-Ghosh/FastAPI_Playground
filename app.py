@@ -15,4 +15,4 @@ def read_root():
 app.include_router(main_router)
 
 if __name__ == "__main__":
-    uvicorn.run(app,host=settings.HOST,port=settings.PORT,reload=settings.RELOAD)
+    uvicorn.run("app:app",host=settings.HOST,port=settings.PORT,reload=settings.RELOAD)
