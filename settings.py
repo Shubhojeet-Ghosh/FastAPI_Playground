@@ -7,6 +7,7 @@ class Settings(BaseSettings):
     RELOAD: bool = True
     HOST:str = "0.0.0.0"
     ENVIRONMENT: str
+    WORKERS: int = 2
 
     class Config:
         env_file = ".env"
