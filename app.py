@@ -3,8 +3,13 @@ import uvicorn
 
 from settings import settings
 from routes.main_router import *
+from sockets.sockets import socketio_app
 
+# Initialize FastAPI
 app = FastAPI(title=settings.PROJECT_TITLE, version=settings.PROJECT_VERSION)
+
+# Mount Socket.IO application at /socket.io
+app.mount("/socket.io", socketio_app)
 
 @app.get("/")
 def read_root():
