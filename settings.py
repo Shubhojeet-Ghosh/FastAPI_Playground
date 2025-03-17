@@ -9,7 +9,9 @@ class Settings(BaseSettings):
     HOST: str = "0.0.0.0"
     ENVIRONMENT: str
     WORKERS: int = 2
-
+    MONGO_URI: str
+    MONGO_DB_NAME: str
+    
     class Config:
         env_file = ".env"
         env_file_encoding = "utf-8"
