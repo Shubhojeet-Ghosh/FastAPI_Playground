@@ -7,42 +7,52 @@ LOGS_DIR = "client_logs"
 os.makedirs(LOGS_DIR, exist_ok=True)
 
 def get_logger(client_id: str = None):
-    """Dynamically creates a logger for a specific client, handling missing client_id cases."""
+    """Creates a logger that logs to both file and console."""
 
     try:
-        # If client_id is missing, use a default "unknown_client"
-        client_id = client_id if client_id else "general_clients"
+        # If client_id is missing, use a default "general_logs"
+        client_id = client_id if client_id else "general_logs"
 
         # Create a directory for this specific client
         client_log_dir = os.path.join(LOGS_DIR, client_id)
         os.makedirs(client_log_dir, exist_ok=True)
 
-        # Log file for this client
+        # Log file path
         log_file = os.path.join(client_log_dir, f"{client_id}.log")
 
-        # Configure logger for this client
+        # Get the logger
         logger = logging.getLogger(client_id)
 
-        # Avoid duplicate handlers (important for performance)
+        # Prevent duplicate handlers
         if not logger.handlers:
-            handler = logging.FileHandler(log_file)
-            formatter = logging.Formatter("%(asctime)s - %(levelname)s - %(message)s")
-            handler.setFormatter(formatter)
-            logger.addHandler(handler)
+            # File Handler
+            file_handler = logging.FileHandler(log_file)
+            file_formatter = logging.Formatter("%(asctime)s - %(levelname)s - %(message)s")
+            file_handler.setFormatter(file_formatter)
+
+            # Console Handler (to print logs)
+            console_handler = logging.StreamHandler()
+            console_formatter = logging.Formatter("[%(levelname)s] %(message)s")
+            console_handler.setFormatter(console_formatter)
+
+            # Add handlers to the logger
+            logger.addHandler(file_handler)
+            logger.addHandler(console_handler)
+
             logger.setLevel(logging.INFO)
+            logger.propagate = False  # Prevent duplicate logs
 
         return logger
 
     except Exception as e:
-        # Create a fallback logger for critical logging issues
+        # Fallback logger for logging issues
         fallback_logger = logging.getLogger("fallback_logger")
         if not fallback_logger.handlers:
-            handler = logging.FileHandler("fallback_error.log")
-            formatter = logging.Formatter("%(asctime)s - %(levelname)s - %(message)s")
-            handler.setFormatter(formatter)
-            fallback_logger.addHandler(handler)
+            fallback_handler = logging.FileHandler("fallback_error.log")
+            fallback_formatter = logging.Formatter("%(asctime)s - %(levelname)s - %(message)s")
+            fallback_handler.setFormatter(fallback_formatter)
+            fallback_logger.addHandler(fallback_handler)
             fallback_logger.setLevel(logging.ERROR)
-        
-        fallback_logger.error(f"Error in get_logger: {e}")
 
-        return fallback_logger  # Return a fallback logger instead of None
+        fallback_logger.error(f"Error in get_logger: {e}")
+        return fallback_logger
