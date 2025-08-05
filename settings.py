@@ -3,7 +3,7 @@ from pydantic import Field
 
 class Settings(BaseSettings):
     PROJECT_TITLE: str = "FastAPI Playground"
-    PROJECT_VERSION: str = "0.0.2"
+    PROJECT_VERSION: str = "0.0.3"
     PORT: int = 8000
     RELOAD: bool = Field(default=True)  # Pydantic will handle type conversion
     HOST: str = "0.0.0.0"
