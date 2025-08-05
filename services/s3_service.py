@@ -1,6 +1,7 @@
 import boto3
 from fastapi import HTTPException
 from settings import settings
+import urllib.parse
 
 def generate_presigned_upload_url(
     bucket_name: str,
@@ -30,10 +31,12 @@ def generate_presigned_upload_url(
             ExpiresIn=expires_in,
             HttpMethod="PUT"
         )
+        encoded_key = urllib.parse.quote(s3_key)
+        s3_url = f"https://{bucket_name}.s3.{settings.AWS_REGION}.amazonaws.com/{encoded_key}"
         return {
             "status": True,
             "upload_url": url,
-            "s3_key": s3_key
+            "s3_key": s3_url
         }
     except Exception as e:
         return {
@@ -49,4 +52,4 @@ def construct_s3_object_url(
     """
     Constructs the public S3 object URL from bucket, region, and file key.
     """
-    return f"https://{bucket_name}.s3.{region_name}.amazonaws.com/{file_key}"    
+    return f"https://{bucket_name}.s3.{region_name}.amazonaws.com/{file_key}"
