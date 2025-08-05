@@ -36,7 +36,8 @@ def generate_presigned_upload_url(
         return {
             "status": True,
             "upload_url": url,
-            "s3_key": s3_url
+            "s3_key": s3_key,
+            "s3_object_url": s3_url,
         }
     except Exception as e:
         return {
@@ -50,6 +51,7 @@ def construct_s3_object_url(
     region_name: str = settings.AWS_REGION
 ) -> str:
     """
-    Constructs the public S3 object URL from bucket, region, and file key.
+    Constructs a public S3 object URL, ensuring the file_key is URL-safe.
     """
-    return f"https://{bucket_name}.s3.{region_name}.amazonaws.com/{file_key}"
+    encoded_key = urllib.parse.quote(file_key)
+    return f"https://{bucket_name}.s3.{region_name}.amazonaws.com/{encoded_key}"

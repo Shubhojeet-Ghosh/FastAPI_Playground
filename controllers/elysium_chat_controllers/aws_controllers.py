@@ -46,10 +46,7 @@ def generate_profile_image_presigned_url_controller(requestData,user):
         
         upload_url = url_data.get("upload_url")
         s3_key = url_data.get("s3_key")
-        s3_object_url = construct_s3_object_url(
-            bucket_name=bucket_name,
-            file_key=s3_key
-        )
+        s3_object_url = url_data.get("s3_object_url")
 
         return {
             "success": True,
