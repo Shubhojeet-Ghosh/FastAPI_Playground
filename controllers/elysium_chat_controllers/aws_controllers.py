@@ -1,7 +1,7 @@
 from logging_config import get_logger
 from services.s3_service import *
 
-from app_config.elysium_chat_config.chat_config import PUBLIC_BUCKET_NAME
+from app_config.elysium_chat_config.chat_config import GLOBAL_CDN_BUCKET_NAME,CDN_BASE_URL
 
 def generate_profile_image_presigned_url_controller(requestData,user):
     try: 
@@ -18,8 +18,8 @@ def generate_profile_image_presigned_url_controller(requestData,user):
         logger.info(f"Request Data : {requestData}")
         
         user_id = user.get("user_id")
-        bucket_name = PUBLIC_BUCKET_NAME
-        base_folder_location = f"profile_pictures/{user_id}/"
+        bucket_name = GLOBAL_CDN_BUCKET_NAME
+        base_folder_location = f"elysium_chat_profile_pictures/{user_id}/"
        
         file_name = requestData.get("file_name")
         file_type = requestData.get("file_type")
@@ -52,7 +52,7 @@ def generate_profile_image_presigned_url_controller(requestData,user):
             "success": True,
             "message": "Presigned URL generated successfully",
             "presigned_url": upload_url,
-            "s3_object_url": s3_object_url
+            "cdn_url":f"{CDN_BASE_URL}/{s3_key}"
         }
     
     except Exception as e:
